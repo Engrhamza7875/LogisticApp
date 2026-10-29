@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "start emulator",
+            "type": "shell",
+            "command": "flutter",
+            "args": [
+                "emulators",
+                "--launch",
+                "Pixel_4_API_35"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ]
+}

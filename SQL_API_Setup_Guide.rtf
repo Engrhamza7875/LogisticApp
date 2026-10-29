@@ -1,0 +1,88 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}
+\fs24
+\b SabCargo API to SQL Server Setup Guide\b0\par
+\par
+This guide explains how to connect your SabCargo backend API to Microsoft SQL Server in a clear step-by-step flow.\par
+Each step includes a short introduction so you understand why it is needed.\par
+\par
+\b Step 1: Confirm Required Software\b0\par
+Before setup, make sure required tools are installed.\par
+- SQL Server\par
+- SSMS\par
+- Node.js and npm\par
+- Flutter SDK\par
+\par
+\b Step 2: Create SQL Login and Database User\b0\par
+The backend API needs a SQL login with database permissions.\par
+Run this in SSMS New Query:\par
+{\f1
+IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = 'sabcargo_app')\par
+BEGIN\par
+    CREATE LOGIN sabcargo_app WITH PASSWORD = 'Pakistan@123';\par
+END\par
+ELSE\par
+BEGIN\par
+    ALTER LOGIN sabcargo_app WITH PASSWORD = 'Pakistan@123';\par
+END\par
+GO\par
+\par
+USE SabCargoDB;\par
+GO\par
+\par
+IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = 'sabcargo_app')\par
+BEGIN\par
+    CREATE USER sabcargo_app FOR LOGIN sabcargo_app;\par
+END\par
+GO\par
+\par
+ALTER ROLE db_owner ADD MEMBER sabcargo_app;\par
+GO\par
+}\par
+\b Step 3: Enable Mixed Mode\b0\par
+In SSMS server Properties > Security, choose SQL Server and Windows Authentication mode, then restart SQL Server service.\par
+\par
+\b Step 4: Configure Backend .env\b0\par
+Create file backend/.env with:\par
+{\f1
+PORT=5000\par
+DB_USER=sabcargo_app\par
+DB_PASSWORD=Pakistan@123\par
+DB_SERVER=DESKTOP-OPPHQ49\par
+DB_PORT=1433\par
+DB_NAME=SabCargoDB\par
+}\par
+\b Step 5: Install Dependencies\b0\par
+{\f1 cd "C:\\Users\\hp\\.gemini\\antigravity\\scratch\\sabcargo\\backend"\par
+npm.cmd install\par
+}\par
+\b Step 6: Start Backend API\b0\par
+{\f1 npm.cmd start\par
+}\par
+Expected logs:\par
+- Server running on http://localhost:5000\par
+- Connected to SQL Server\par
+\par
+If port 5000 is busy:\par
+{\f1 taskkill /F /IM node.exe\par
+npm.cmd start\par
+}\par
+\b Step 7: Platform API URLs\b0\par
+- Web: http://localhost:5000/api\par
+- Android emulator: http://10.0.2.2:5000/api\par
+- Windows desktop: http://localhost:5000/api\par
+\par
+\b Step 8: Run Flutter App\b0\par
+In second terminal:\par
+{\f1
+cd "C:\\Users\\hp\\.gemini\\antigravity\\scratch\\sabcargo"\par
+flutter run\par
+}\par
+\b Step 9: Verify API\b0\par
+Open: http://localhost:5000/api/users\par
+If JSON appears, API-to-SQL connection is working.\par
+\par
+\b Daily Quick Run\b0\par
+Terminal 1: {\f1 cd "C:\\Users\\hp\\.gemini\\antigravity\\scratch\\sabcargo\\backend"  &&  npm.cmd start}\par
+Terminal 2: {\f1 cd "C:\\Users\\hp\\.gemini\\antigravity\\scratch\\sabcargo"  &&  flutter run}\par
+}
